@@ -1,0 +1,5 @@
+name: BlowableObsidians
+author: [HydroTekZ]
+main: net.hydrotekz.BlowableObsidians.BlowablePlugin
+version: 3.1
+spigot: 24194
