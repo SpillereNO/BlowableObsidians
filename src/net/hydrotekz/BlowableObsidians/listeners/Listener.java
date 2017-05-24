@@ -38,6 +38,7 @@ public class Listener implements org.bukkit.event.Listener {
 		if (!e.isCancelled() && e.getEntity() != null){
 			if (plugin.getConfig().getBoolean("Only TNT") && e.getEntityType() != EntityType.PRIMED_TNT) return;
 			Location source = e.getLocation();
+			String sourceID = plugin.Handler.getID(source.getBlock());
 			double dmgRadius = plugin.getConfig().getDouble("Damage Radius");
 			if (e.getYield() > 1) dmgRadius+=e.getYield()/10;
 			int radius = (int)Math.ceil(dmgRadius);
@@ -47,11 +48,11 @@ public class Listener implements org.bukkit.event.Listener {
 						Location loc = new Location(source.getWorld(), x + source.getX(), y + source.getY(), z + source.getZ());
 						if (source.distance(loc) <= dmgRadius) {
 							Block block = loc.getBlock();
+							String blockID = plugin.Handler.getID(block);
 							if (plugin.Handler.makeBlowable(block.getType())){
 								// Get distance and damage
 								double distance = loc.distance(source);
-								double damage = plugin.Handler.getDamage(block.getType());
-								if (block.getType() != Material.OBSIDIAN) damage+=2;
+								double damage = 1;
 
 								// Yield
 								if (e.getYield() > 0.5) damage+=2;
@@ -76,13 +77,17 @@ public class Listener implements org.bukkit.event.Listener {
 											if (source.getBlock().getType() == Material.AIR && b.isLiquid()) {
 												damage = damage * plugin.getConfig().getDouble("Liquid Multiplier");
 											}
+
 											// Through blocks multipliers
-											if (b.getType() == Material.BEDROCK){
-												damage = damage * 0.5;
-											} else if (b.getType() == Material.OBSIDIAN){
-												damage = damage * 0.7;
-											} else if (b.getType() != Material.AIR){
-												damage = damage * 0.9;
+											String thisID = plugin.Handler.getID(b);
+											if (!thisID.equalsIgnoreCase(sourceID) && !thisID.equalsIgnoreCase(blockID)){
+												if (b.getType() == Material.BEDROCK){
+													damage = damage * 0.5;
+												} else if (b.getType() == Material.OBSIDIAN){
+													damage = damage * 0.7;
+												} else if (b.getType() != Material.AIR){
+													damage = damage * 0.9;
+												}
 											}
 										}
 									}
@@ -92,10 +97,11 @@ public class Listener implements org.bukkit.event.Listener {
 
 								// Damage the block
 								if (damage > 0){
-									damage = damage/distance;
+									if (distance > 1) damage = damage / (distance * 0.7);
+
 									String id = plugin.Handler.getID(block);
 									if (healthMap.containsKey(id)) healthMap.put(id, healthMap.get(id)-damage);
-									else healthMap.put(id, plugin.getConfig().getDouble("Block Health")-damage);
+									else healthMap.put(id, plugin.Handler.getHealth(block)-damage);
 									if (healthMap.get(id) <= 0){
 										block.breakNaturally();
 										healthMap.remove(id);
@@ -128,7 +134,7 @@ public class Listener implements org.bukkit.event.Listener {
 					Block b = e.getClickedBlock();
 					String id = plugin.Handler.getID(b);
 					if (healthMap.containsKey(id)){
-						int percent = (int)(((healthMap.get(id) * 100) / plugin.getConfig().getDouble("Block Health")));
+						int percent = (int)(((healthMap.get(id) * 100) / plugin.Handler.getHealth(b)));
 						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health").replaceFirst("<percent>", String.valueOf(percent)));
 						p.sendMessage(msg);
 					} else if (plugin.Handler.makeBlowable(b.getType()) && plugin.getConfig().getBoolean("Always Send Health")){
@@ -150,7 +156,7 @@ public class Listener implements org.bukkit.event.Listener {
 				if(entity.getType() == EntityType.FALLING_BLOCK){
 					Location loc = entity.getLocation();
 					boolean voidStack = false;
-					if (loc.getBlockY() < 0){
+					if (plugin.getConfig().getBoolean("Void Stacking") && loc.getBlockY() < 0){
 						loc.setY(0);
 						voidStack = true;
 						Block bedrock = loc.getBlock();
@@ -160,24 +166,25 @@ public class Listener implements org.bukkit.event.Listener {
 						}
 					}
 					Block below = loc.getBlock();
-					if (plugin.getConfig().getIntegerList("Falling Blocks Land.Upon Blocks").contains(below.getTypeId()) || voidStack){
+					if (plugin.Handler.landUpon(below) || voidStack){
 						Block block = below.getRelative(BlockFace.UP);
 
-						fallingBlocks++;
+						if (plugin.getConfig().getBoolean("Better Stacking")){
+							fallingBlocks++;
+							if (fallingBlocks >= 2){
+								fallingBlocks = 0;
+								continue;
+							}
 
-						if (fallingBlocks >= 2){
-							fallingBlocks = 0;
-							continue;
-						}
-
-						int attempts = 0;
-						while(block.getType() != Material.AIR && !block.isLiquid()){
-							attempts++;
-							String attempt = String.valueOf(attempts);
-							if (attempt.endsWith("0") || attempt.endsWith("2") || attempt.endsWith("4") || attempt.endsWith("6") || attempt.endsWith("8")) continue;
-							if (!plugin.getConfig().getIntegerList("Falling Blocks Land.Upon Blocks").contains(block.getTypeId())) return;
-							block = block.getRelative(BlockFace.UP);
-							if (block.getY() > 256) return;
+							int attempts = 0;
+							while(block.getType() != Material.AIR && !block.isLiquid()){
+								attempts++;
+								String attempt = String.valueOf(attempts);
+								if (attempt.endsWith("0") || attempt.endsWith("2") || attempt.endsWith("4") || attempt.endsWith("6") || attempt.endsWith("8")) continue;
+								if (!plugin.Handler.landUpon(block)) return;
+								block = block.getRelative(BlockFace.UP);
+								if (block.getY() > 256) return;
+							}
 						}
 
 						e.getEntity().remove();

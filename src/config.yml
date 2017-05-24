@@ -1,0 +1,63 @@
+###########################################
+# ------------ Main features ------------ #
+###########################################
+
+### Various options
+Damage Radius: 3.0
+Only TNT: false
+
+### Send block health if 100% health.
+Always Send Health: false
+
+### Reduce damage when through blocks.
+### Note: This disables air bursting.
+Scan Through Blocks: true
+
+### How effective explosions damage through water/lava.
+### Damage is multiplied with this if liquid is blocking.
+Liquid Multiplier: 0.0
+
+### When to send block health message.
+Check:
+  Item: 'STICK'
+  Type: 'RIGHT_CLICK_BLOCK'
+
+### Messages which can be translated.
+Message:
+  Block health: '&9Block health: &c<percent>% hp'
+
+### How much health the blowable blocks has.
+### You can also add more blocks here :)
+Blowable Blocks Health:
+  obsidian: 5.0
+  enchanting_table: 5.0
+  anvil: 5.0
+  ender_chest: 5.0
+  enchanting_table: 5.0
+
+
+###########################################
+# ------------ Other features ----------- #
+###########################################
+
+### Make falling blocks land on various types of blocks.
+Falling Blocks Land:
+  Enabled: true
+  Upon Blocks:
+  - enchanting_table
+  - bed
+  - chest
+  - trapped_chest
+  - ender_chest
+
+### Let falling blocks stack upon the void.
+### This may be useful to make raidable factions in The End.
+Void Stacking: true
+
+### Tired of stacking just a few sand blocks at a time?
+### Makes it easier to stack multiple blocks at once.
+Better Stacking: true
+
+
+### Don't touch this
+Config Version: 4
