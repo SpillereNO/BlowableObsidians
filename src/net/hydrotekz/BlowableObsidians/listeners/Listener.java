@@ -1,5 +1,6 @@
 package net.hydrotekz.BlowableObsidians.listeners;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,6 +43,13 @@ public class Listener implements org.bukkit.event.Listener {
 			double dmgRadius = plugin.getConfig().getDouble("Damage Radius");
 			if (e.getYield() > 1) dmgRadius+=e.getYield()/10;
 			int radius = (int)Math.ceil(dmgRadius);
+
+			for (Block b : new ArrayList<Block>(e.blockList())){
+				if (plugin.Handler.makeBlowable(b.getType())){
+					e.blockList().remove(b);
+				}
+			}
+
 			for (int x = -radius; x <= radius; x++) {
 				for (int y = -radius; y <= radius; y++) {
 					for (int z = -radius; z <= radius; z++) {
@@ -55,11 +63,11 @@ public class Listener implements org.bukkit.event.Listener {
 								double damage = 1;
 
 								// Yield
-								if (e.getYield() > 0.5) damage+=2;
-								if (e.getYield() > 8) damage+=2;
-								if (e.getYield() > 16) damage+=2;
-								if (e.getYield() > 22) damage+=2;
-								if (e.getYield() > 28) damage+=2;
+								if (e.getYield() > 0.5) damage+=1;
+								else if (e.getYield() > 8) damage+=2;
+								else if (e.getYield() > 16) damage+=3;
+								else if (e.getYield() > 22) damage+=4;
+								else if (e.getYield() > 28) damage+=5;
 
 								// Check if source is liquid
 								if (source.getBlock().isLiquid()){
@@ -69,12 +77,13 @@ public class Listener implements org.bukkit.event.Listener {
 								// Scan for liquid and other blocks
 								if (damage > 0){
 									if (plugin.getConfig().getBoolean("Scan Through Blocks")){
+										//										try {
 										Vector v = new Vector(loc.getBlockX() - source.getBlockX(), loc.getBlockY() - source.getBlockY(), loc.getBlockZ() - source.getBlockZ());
 										BlockIterator it = new BlockIterator(source.getWorld(), source.toVector(), v, 0.0D, (int)source.distance(loc));
 										while (it.hasNext()) {
 											Block b = it.next();
 											// Through liquid multiplier
-											if (source.getBlock().getType() == Material.AIR && b.isLiquid()) {
+											if (!source.getBlock().isLiquid() && b.isLiquid()) {
 												damage = damage * plugin.getConfig().getDouble("Liquid Multiplier");
 											}
 
@@ -90,6 +99,9 @@ public class Listener implements org.bukkit.event.Listener {
 												}
 											}
 										}
+										//										} catch (NullPointerException ex){
+										//											continue;
+										//										}
 									}
 								} else {
 									continue;
@@ -103,7 +115,7 @@ public class Listener implements org.bukkit.event.Listener {
 									if (healthMap.containsKey(id)) healthMap.put(id, healthMap.get(id)-damage);
 									else healthMap.put(id, plugin.Handler.getHealth(block)-damage);
 									if (healthMap.get(id) <= 0){
-										block.breakNaturally();
+										e.blockList().add(block);
 										healthMap.remove(id);
 									}
 								}
@@ -149,8 +161,10 @@ public class Listener implements org.bukkit.event.Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler (priority = EventPriority.MONITOR)
 	public void onItemSpawn(ItemSpawnEvent e){
-		if (!e.isCancelled() && plugin.getConfig().getBoolean("Falling Blocks Land.Enabled")){
+		if (!e.isCancelled() && (plugin.getConfig().getBoolean("Better Stacking") || 
+				plugin.getConfig().getBoolean("Void Stacking"))){
 			List<Entity> entities = e.getEntity().getNearbyEntities(2, 2, 2);
+			if (entities == null || entities.isEmpty()) return;
 			int fallingBlocks = 0;
 			for(Entity entity : entities){
 				if(entity.getType() == EntityType.FALLING_BLOCK){
