@@ -11,7 +11,7 @@ import net.hydrotekz.BlowableObsidians.listeners.*;
 public class BlowablePlugin extends JavaPlugin {
 
 	public FileConfiguration config;
-	public int configVersion = 6;
+	public int configVersion = 7;
 
 	public final Listener Listener = new Listener(this);
 	public final Handler Handler = new Handler(this);

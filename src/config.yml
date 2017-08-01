@@ -9,10 +9,6 @@ Only TNT: false
 ### Send block health if 100% health.
 Always Send Health: true
 
-### Reduce damage when through blocks.
-### Note: This disables air bursting.
-Scan Through Blocks: false
-
 ### How effective explosions damage through water/lava.
 ### Damage is multiplied with this if liquid is blocking.
 Liquid Multiplier: 0.0
@@ -62,4 +58,4 @@ Better Stacking: true
 
 
 ### Don't touch this
-Config Version: 6
+Config Version: 7

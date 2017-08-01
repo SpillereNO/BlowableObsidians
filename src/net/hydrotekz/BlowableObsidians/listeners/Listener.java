@@ -19,8 +19,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.util.BlockIterator;
-import org.bukkit.util.Vector;
 
 import net.hydrotekz.BlowableObsidians.BlowablePlugin;
 
@@ -39,7 +37,6 @@ public class Listener implements org.bukkit.event.Listener {
 		if (!e.isCancelled() && e.getEntity() != null){
 			if (plugin.getConfig().getBoolean("Only TNT") && e.getEntityType() != EntityType.PRIMED_TNT) return;
 			Location source = e.getLocation();
-			String sourceID = plugin.Handler.getID(source.getBlock());
 			double dmgRadius = plugin.getConfig().getDouble("Damage Radius");
 			if (e.getYield() > 1) dmgRadius+=e.getYield()/10;
 			int radius = (int)Math.ceil(dmgRadius);
@@ -56,7 +53,6 @@ public class Listener implements org.bukkit.event.Listener {
 						Location loc = new Location(source.getWorld(), x + source.getX(), y + source.getY(), z + source.getZ());
 						if (source.distance(loc) <= dmgRadius) {
 							Block block = loc.getBlock();
-							String blockID = plugin.Handler.getID(block);
 							if (plugin.Handler.makeBlowable(block.getType())){
 								// Get distance and damage
 								double distance = loc.distance(source);
@@ -72,39 +68,6 @@ public class Listener implements org.bukkit.event.Listener {
 								// Check if source is liquid
 								if (source.getBlock().isLiquid()){
 									damage = damage * plugin.getConfig().getDouble("Liquid Multiplier");
-								}
-
-								// Scan for liquid and other blocks
-								if (damage > 0){
-									if (plugin.getConfig().getBoolean("Scan Through Blocks")){
-										//										try {
-										Vector v = new Vector(loc.getBlockX() - source.getBlockX(), loc.getBlockY() - source.getBlockY(), loc.getBlockZ() - source.getBlockZ());
-										BlockIterator it = new BlockIterator(source.getWorld(), source.toVector(), v, 0.0D, (int)source.distance(loc));
-										while (it.hasNext()) {
-											Block b = it.next();
-											// Through liquid multiplier
-											if (!source.getBlock().isLiquid() && b.isLiquid()) {
-												damage = damage * plugin.getConfig().getDouble("Liquid Multiplier");
-											}
-
-											// Through blocks multipliers
-											String thisID = plugin.Handler.getID(b);
-											if (!thisID.equalsIgnoreCase(sourceID) && !thisID.equalsIgnoreCase(blockID)){
-												if (b.getType() == Material.BEDROCK){
-													damage = damage * 0.5;
-												} else if (b.getType() == Material.OBSIDIAN){
-													damage = damage * 0.7;
-												} else if (b.getType() != Material.AIR){
-													damage = damage * 0.9;
-												}
-											}
-										}
-										//										} catch (NullPointerException ex){
-										//											continue;
-										//										}
-									}
-								} else {
-									continue;
 								}
 
 								// Damage the block
