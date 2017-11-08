@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BlowableObsidians:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BlowableObsidians_jar</output-path>
+    <root id="archive" name="BlowableObsidians.jar">
+      <element id="module-output" name="BlowableObsidians" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/config.yml" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/plugin.yml" />
+    </root>
+  </artifact>
+</component>

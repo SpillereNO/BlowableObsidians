@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
@@ -51,8 +52,23 @@ public class Listener implements org.bukkit.event.Listener {
 				for (int y = -radius; y <= radius; y++) {
 					for (int z = -radius; z <= radius; z++) {
 						Location loc = new Location(source.getWorld(), x + source.getX(), y + source.getY(), z + source.getZ());
+
 						if (source.distance(loc) <= dmgRadius) {
 							Block block = loc.getBlock();
+							World world = loc.getWorld();
+
+							// Don't damage blocks naturally generated
+							if(block.getType() == Material.BEDROCK){
+								switch (world.getEnvironment()){
+									case NORMAL:
+										if(loc.getBlockY() < 6) return;
+										break;
+									case NETHER:
+										if(loc.getBlockY() == 0 || loc.getBlockY() == 127) return;
+										break;
+								}
+							}
+
 							if (plugin.Handler.makeBlowable(block.getType())){
 								// Get distance and damage
 								double distance = loc.distance(source);
@@ -107,6 +123,21 @@ public class Listener implements org.bukkit.event.Listener {
 				String required = plugin.getConfig().getString("Check.Item");
 				if (required.equals("*") || (p.getItemInHand() != null && p.getItemInHand().getType().toString().equalsIgnoreCase(required))){
 					Block b = e.getClickedBlock();
+					Location loc = b.getLocation();
+					World world = b.getLocation().getWorld();
+
+					// Don't check blocks naturally generated
+					if(b.getType() == Material.BEDROCK){
+						switch (world.getEnvironment()){
+							case NORMAL:
+								if(loc.getBlockY() < 6) return;
+								break;
+							case NETHER:
+								if(loc.getBlockY() == 0 || loc.getBlockY() == 127) return;
+								break;
+						}
+					}
+
 					String id = plugin.Handler.getID(b);
 					if (healthMap.containsKey(id)){
 						int percent = (int)(((healthMap.get(id) * 100) / plugin.Handler.getHealth(b)));
