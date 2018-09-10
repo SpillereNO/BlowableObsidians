@@ -42,7 +42,7 @@ public class Listener implements org.bukkit.event.Listener {
 			int radius = (int)Math.ceil(dmgRadius);
 
 			for (Block b : new ArrayList<Block>(e.blockList())){
-				if (plugin.Handler.makeBlowable(b.getType())){
+				if (plugin.Handler.makeBlowable(b)){
 					e.blockList().remove(b);
 				}
 			}
@@ -53,7 +53,8 @@ public class Listener implements org.bukkit.event.Listener {
 						Location loc = new Location(source.getWorld(), x + source.getX(), y + source.getY(), z + source.getZ());
 						if (source.distance(loc) <= dmgRadius) {
 							Block block = loc.getBlock();
-							if (plugin.Handler.makeBlowable(block.getType())){
+							if (plugin.Handler.makeBlowable(block)){
+
 								// Get distance and damage
 								double distance = loc.distance(source);
 								double damage = 1;
@@ -112,7 +113,7 @@ public class Listener implements org.bukkit.event.Listener {
 						int percent = (int)(((healthMap.get(id) * 100) / plugin.Handler.getHealth(b)));
 						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health").replaceFirst("<percent>", String.valueOf(percent)));
 						p.sendMessage(msg);
-					} else if (plugin.Handler.makeBlowable(b.getType()) && plugin.getConfig().getBoolean("Always Send Health")){
+					} else if (plugin.Handler.makeBlowable(b) && plugin.getConfig().getBoolean("Always Send Health")){
 						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health").replaceFirst("<percent>", "100"));
 						p.sendMessage(msg);
 					}
@@ -168,8 +169,7 @@ public class Listener implements org.bukkit.event.Listener {
 						entity.remove();
 
 						FallingBlock fallingBlock = (FallingBlock) entity;
-						block.setTypeId(fallingBlock.getBlockId());
-						block.setData(fallingBlock.getBlockData());
+						block.setType(fallingBlock.getMaterial());
 					}
 				}
 			}

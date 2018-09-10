@@ -30,7 +30,21 @@ public class Handler {
 		return damage;
 	}
 
-	public boolean makeBlowable(Material m){
+	public boolean makeBlowable(Block b){
+		if (b.getType() == Material.BEDROCK) {
+			int bedrockProtectionLevel = plugin.getConfig().getInt("Bedrock protection");
+			if (!b.getWorld().getName().endsWith("_nether") && !b.getWorld().getName().endsWith("_the_end")) {
+				if (b.getY() <= bedrockProtectionLevel) {
+					return false;
+				}
+			} else if (b.getWorld().getName().endsWith("_nether")) {
+				if (b.getY() == 127) {
+					return false;
+				}
+			}
+		}
+
+		Material m = b.getType();
 		Map<String, Object> blowableBlocks = plugin.getConfig().getConfigurationSection("Blowable Blocks Health").getValues(false);
 		blowableBlocks = lowerMapKeys(blowableBlocks);
 		return blowableBlocks.containsKey(m.toString().toLowerCase());

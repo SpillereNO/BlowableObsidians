@@ -9,8 +9,8 @@ Only TNT: false
 ### Send block health if 100% health.
 Always Send Health: true
 
-### How effective explosions damage through water/lava.
-### Damage is multiplied with this if liquid is blocking.
+### How effective explosions damage inside water/lava.
+### Damage is multiplied with this if inside a liquid.
 Liquid Multiplier: 0.0
 
 ### When to send block health message.
@@ -31,6 +31,10 @@ Blowable Blocks Health:
   ender_chest: 5.0
 # List of blocks here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 
+### Protect bedrock below chosen Y level ###
+Bedrock protection: 2
+# This applies only to normal world types.
+# Nether has an override at Y 127 :)
 
 ###########################################
 # ------------ Other features ----------- #
@@ -58,4 +62,4 @@ Better Stacking: true
 
 
 ### Don't touch this
-Config Version: 7
+Config Version: 8
