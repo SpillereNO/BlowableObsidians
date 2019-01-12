@@ -26,7 +26,7 @@ public class Handler {
 		Material m = b.getType();
 		Map<String, Object> blowableBlocks = plugin.getConfig().getConfigurationSection("Blowable Blocks Health").getValues(false);
 		blowableBlocks = lowerMapKeys(blowableBlocks);
-		double damage = (double) blowableBlocks.get(m.toString().toLowerCase());
+		double damage = (double) ((Double)blowableBlocks.get(m.toString().toLowerCase())).doubleValue();
 		return damage;
 	}
 
