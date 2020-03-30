@@ -1,6 +1,6 @@
-###########################################
-# ------------ Main features ------------ #
-###########################################
+##########################################
+# -------------- Features -------------- #
+##########################################
 
 ### Various options
 Damage Radius: 3.0
@@ -36,30 +36,5 @@ Bedrock protection: 2
 # This applies only to normal world types.
 # Nether has an override at Y 127 :)
 
-###########################################
-# ------------ Other features ----------- #
-###########################################
-
-### Make falling blocks land on various types of blocks.
-Falling Blocks Land:
-  Enabled: true
-  Upon Blocks:
-  - enchantment_table
-  - bed_block
-  - chest
-  - trapped_chest
-  - ender_chest
-  - sand
-# List of blocks here: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
-
-### Let falling blocks stack upon the void.
-### This may be useful to make raidable factions in The End.
-Void Stacking: true
-
-### Tired of stacking just a few sand blocks at a time?
-### Makes it easier to stack multiple blocks at once.
-Better Stacking: true
-
-
 ### Don't touch this
-Config Version: 8
+Config Version: 9

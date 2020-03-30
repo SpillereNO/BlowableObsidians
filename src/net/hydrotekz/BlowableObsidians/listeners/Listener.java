@@ -6,26 +6,23 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.hydrotekz.BlowableObsidians.BlowablePlugin;
+import net.hydrotekz.BlowableObsidians.support.MultiVersion;
 
 public class Listener implements org.bukkit.event.Listener {
 
-	BlowablePlugin plugin;
+	private BlowablePlugin plugin;
 
 	public Listener(BlowablePlugin blowablePlugin){
 		plugin = blowablePlugin;
@@ -37,8 +34,11 @@ public class Listener implements org.bukkit.event.Listener {
 	public void onBlockExplode(BlockExplodeEvent e) {
 		if (!e.isCancelled()){
 			List<Block> result = onBoom(e.getBlock().getLocation(), e.getYield(), e.blockList());
-			e.blockList().clear();
-			for (Block b : result) e.blockList().add(b);
+			for (Block b : e.blockList()) {
+				if (!result.contains(b)) {
+					e.blockList().remove(b);
+				}
+			}
 		}
 	}
 
@@ -47,8 +47,11 @@ public class Listener implements org.bukkit.event.Listener {
 		if (!e.isCancelled() && e.getEntity() != null){
 			if (plugin.getConfig().getBoolean("Only TNT") && e.getEntityType() != EntityType.PRIMED_TNT) return;
 			List<Block> result = onBoom(e.getLocation(), e.getYield(), e.blockList());
-			e.blockList().clear();
-			for (Block b : result) e.blockList().add(b);
+			for (Block b : e.blockList()) {
+				if (!result.contains(b)) {
+					e.blockList().remove(b);
+				}
+			}
 		}
 	}
 
@@ -115,14 +118,13 @@ public class Listener implements org.bukkit.event.Listener {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@EventHandler (priority = EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent e){
-		if (!e.isCancelled()){
+		if (e.useInteractedBlock() == Result.ALLOW){
 			Player p = e.getPlayer();
 			if (e.getAction().toString().equalsIgnoreCase(plugin.getConfig().getString("Check.Type"))){
 				String required = plugin.getConfig().getString("Check.Item");
-				if (required.equals("*") || (p.getItemInHand() != null && p.getItemInHand().getType().toString().equalsIgnoreCase(required))){
+				if (required.equals("*") || (MultiVersion.get().getItemInHand(p) != null && p.getItemInHand().getType().toString().equalsIgnoreCase(required))){
 					Block b = e.getClickedBlock();
 					String id = plugin.Handler.getID(b);
 					if (healthMap.containsKey(id)){
@@ -132,61 +134,6 @@ public class Listener implements org.bukkit.event.Listener {
 					} else if (plugin.Handler.makeBlowable(b) && plugin.getConfig().getBoolean("Always Send Health")){
 						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health").replaceFirst("<percent>", "100"));
 						p.sendMessage(msg);
-					}
-				}
-			}
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler (priority = EventPriority.MONITOR)
-	public void onItemSpawn(ItemSpawnEvent e){
-		if (!e.isCancelled() && (plugin.getConfig().getBoolean("Better Stacking") ||
-				plugin.getConfig().getBoolean("Void Stacking"))){
-			List<Entity> entities = e.getEntity().getNearbyEntities(2, 2, 2);
-			if (entities == null || entities.isEmpty()) return;
-			int fallingBlocks = 0;
-			for(Entity entity : entities){
-				if(entity.getType() == EntityType.FALLING_BLOCK){
-					Location loc = entity.getLocation();
-					boolean voidStack = false;
-					if (plugin.getConfig().getBoolean("Void Stacking") && loc.getBlockY() < 0){
-						loc.setY(0);
-						voidStack = true;
-						Block bedrock = loc.getBlock();
-						if (!bedrock.getType().isSolid()){
-							bedrock.setType(Material.SANDSTONE);
-							continue;
-						}
-					}
-					Block below = loc.getBlock();
-					if (plugin.Handler.landUpon(below) || voidStack){
-						Block block = below.getRelative(BlockFace.UP);
-
-						if (plugin.getConfig().getBoolean("Better Stacking")){
-							fallingBlocks++;
-							if (fallingBlocks >= 2){
-								fallingBlocks = 0;
-								continue;
-							}
-
-							int attempts = 0;
-							while(block.getType() != Material.AIR && !block.isLiquid()){
-								attempts++;
-								String attempt = String.valueOf(attempts);
-								if (attempt.endsWith("0") || attempt.endsWith("2") || attempt.endsWith("4") || attempt.endsWith("6") || attempt.endsWith("8")) continue;
-								if (!plugin.Handler.landUpon(block)) return;
-								block = block.getRelative(BlockFace.UP);
-								if (block.getY() > 256) return;
-							}
-						}
-
-						e.getEntity().remove();
-						entity.remove();
-
-						FallingBlock fallingBlock = (FallingBlock) entity;
-						block.setType(fallingBlock.getMaterial());
-						//						block.setData(fallingBlock.getBlockData());
 					}
 				}
 			}

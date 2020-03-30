@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import net.hydrotekz.BlowableObsidians.BlowablePlugin;
+import net.hydrotekz.BlowableObsidians.util.Util;
 
 public class Handler {
 
-	BlowablePlugin plugin;
+	private BlowablePlugin plugin;
 
 	public Handler(BlowablePlugin blowablePlugin){
 		plugin = blowablePlugin;
@@ -78,8 +78,9 @@ public class Handler {
 					dest.renameTo(renameTo);
 					System.out.println("[BlowableObsidians] Previous configuration file was renamed to old_config.yml.");
 				}
+				
+				Util.copyUrlToFile(inputUrl, dest);
 
-				FileUtils.copyURLToFile(inputUrl, dest);
 				System.out.println("[BlowableObsidians] Configuration file was successfully exported to plugin folder.");
 			}
 
