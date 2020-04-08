@@ -12,10 +12,12 @@ public abstract class MultiVersion implements VersionSupport {
 		}
 		else {
 			if (BlowablePlugin.mc_version >= 19) {
-				return new mc_newer();
+				multiVersion = new mc_newer();
+				return multiVersion;
 			}
 			else {
-				return new mc_legacy();
+				multiVersion = new mc_legacy();
+				return multiVersion;
 			}
 		}
 	}

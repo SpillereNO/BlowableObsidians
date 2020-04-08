@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Material;
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 
 import net.hydrotekz.BlowableObsidians.BlowablePlugin;
@@ -31,14 +32,15 @@ public class Handler {
 	}
 
 	public boolean makeBlowable(Block b){
+		
 		if (b.getType() == Material.BEDROCK) {
 			int bedrockProtectionLevel = plugin.getConfig().getInt("Bedrock protection");
-			if (!b.getWorld().getName().endsWith("_nether") && !b.getWorld().getName().endsWith("_the_end")) {
+			if (b.getWorld().getEnvironment() == Environment.NORMAL) {
 				if (b.getY() <= bedrockProtectionLevel) {
 					return false;
 				}
-			} else if (b.getWorld().getName().endsWith("_nether")) {
-				if (b.getY() == 127) {
+			} else if (b.getWorld().getEnvironment() == Environment.NETHER) {
+				if (b.getY() == 127 || b.getY() <= bedrockProtectionLevel) {
 					return false;
 				}
 			}

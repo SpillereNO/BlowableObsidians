@@ -1,6 +1,5 @@
 package net.hydrotekz.BlowableObsidians.listeners;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,11 +59,7 @@ public class Listener implements org.bukkit.event.Listener {
 		if (yield > 1) dmgRadius+=yield/10;
 		int radius = (int)Math.ceil(dmgRadius);
 
-		for (Block b : new ArrayList<Block>(blocks)){
-			if (plugin.Handler.makeBlowable(b)){
-				blocks.remove(b);
-			}
-		}
+		blocks.removeIf((block) -> plugin.Handler.makeBlowable(block));
 
 		for (int x = -radius; x <= radius; x++) {
 			for (int y = -radius; y <= radius; y++) {
@@ -124,7 +119,7 @@ public class Listener implements org.bukkit.event.Listener {
 			Player p = e.getPlayer();
 			if (e.getAction().toString().equalsIgnoreCase(plugin.getConfig().getString("Check.Type"))){
 				String required = plugin.getConfig().getString("Check.Item");
-				if (required.equals("*") || (MultiVersion.get().getItemInHand(p) != null && p.getItemInHand().getType().toString().equalsIgnoreCase(required))){
+				if (required.equals("*") || (MultiVersion.get().getItemInHand(p) != null && MultiVersion.get().getItemInHand(p).getType().toString().equalsIgnoreCase(required))){
 					Block b = e.getClickedBlock();
 					String id = plugin.Handler.getID(b);
 					if (healthMap.containsKey(id)){

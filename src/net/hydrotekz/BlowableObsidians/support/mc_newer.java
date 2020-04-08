@@ -15,7 +15,7 @@ public class mc_newer extends MultiVersion implements VersionSupport {
 
 	@Override
 	public ItemStack getItemInHand(Player player) {
-		return player.getItemInHand();
+		return player.getInventory().getItemInMainHand();
 	}
 	
 }

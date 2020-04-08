@@ -15,7 +15,7 @@ Liquid Multiplier: 0.0
 
 ### When to send block health message.
 Check:
-  Item: 'POTATO_ITEM'
+  Item: 'POTATO'
   Type: 'RIGHT_CLICK_BLOCK'
 
 ### Messages which can be translated.

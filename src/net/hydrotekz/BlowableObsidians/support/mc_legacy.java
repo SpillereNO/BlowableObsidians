@@ -15,6 +15,6 @@ public class mc_legacy extends MultiVersion implements VersionSupport {
 	
 	@Override
 	public ItemStack getItemInHand(Player player) {
-		return player.getItemInHand();
+		return player.getInventory().getItemInHand();
 	}
 }
