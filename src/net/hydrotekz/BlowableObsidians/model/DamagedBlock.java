@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import net.hydrotekz.BlowableObsidians.handlers.ConfigHandler;
@@ -20,6 +21,7 @@ public class DamagedBlock {
 
 	private double health;
 	private double lastDamaged;
+	private Material material;
 
 	public DamagedBlock(Block b) {
 
@@ -35,6 +37,7 @@ public class DamagedBlock {
 			z = dmgBlock.getZ();
 			health = dmgBlock.getHealth();
 			lastDamaged = dmgBlock.getLastDamaged();
+			material = dmgBlock.getMaterial();
 		}, () -> {
 			world = b.getWorld().getName();
 			x = b.getX();
@@ -42,6 +45,7 @@ public class DamagedBlock {
 			z = b.getZ();
 			health = ConfigHandler.getDefaultHealth(b.getType());
 			lastDamaged = System.currentTimeMillis();
+			material = b.getType();
 			blocks.add(this);
 		});
 
@@ -74,7 +78,11 @@ public class DamagedBlock {
 	}
 
 	public double getHealth() {
-		return health;
+		double max = ConfigHandler.getDefaultHealth(material);
+		double left = max - health;
+		long now = System.currentTimeMillis();
+		double health = this.health + ( left * (((now-lastDamaged)/1000) / ConfigHandler.getRegenTime()));
+		return health >= max ? max : health;
 	}
 
 	private void setHealth(double health) {
@@ -103,6 +111,14 @@ public class DamagedBlock {
 
 	public int getZ() {
 		return z;
+	}
+
+	public Material getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 	@Override

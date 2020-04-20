@@ -24,8 +24,8 @@ Message:
   Block health: '&9Block health: &c<percent>% hp'
 
 ### How much health the blowable blocks has.
-### Use wildcard <blocks> for all blocks
-### You can also add more blocks here :)
+### Use wildcard <blocks> for all blocks.
+### You can also add more blocks here
 Blowable Blocks Health:
   obsidian: 5.0
   enchantment_table: 5.0
@@ -34,10 +34,13 @@ Blowable Blocks Health:
 # List of blocks here (latest): https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 # List of blocks here (1.8): https://helpch.at/docs/1.8/org/bukkit/Material.html
 
-### Protect bedrock below chosen Y level ###
-Bedrock protection: 2
-# This applies only to normal world types.
-# Nether has an override at Y 127 :)
+### Health regeneration
+### How many seconds until the block health is back at max health.
+Regeneration Time: 3600
+
+### Protect bedrock below chosen Y level
+Bedrock Protection: 2
+# Nether has an override at Y 127
 
 ### Don't touch this
-Config Version: 9
+Config Version: 10

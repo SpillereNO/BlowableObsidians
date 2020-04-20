@@ -29,10 +29,14 @@ public class ConfigHandler {
 		return damage;
 	}
 
+	public static int getRegenTime() {
+		return BlowablePlugin.instance.getConfig().getInt("Regeneration Time");
+	}
+
 	public static boolean makeBlowable(Block b){
 
 		if (b.getType() == Material.BEDROCK) {
-			int bedrockProtectionLevel = BlowablePlugin.instance.getConfig().getInt("Bedrock protection");
+			int bedrockProtectionLevel = BlowablePlugin.instance.getConfig().getInt("Bedrock Protection");
 			if (b.getWorld().getEnvironment() == Environment.NORMAL) {
 				if (b.getY() <= bedrockProtectionLevel) {
 					return false;

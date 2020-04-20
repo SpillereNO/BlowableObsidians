@@ -22,7 +22,7 @@ public class BlowablePlugin extends JavaPlugin {
 	public static BlowablePlugin instance;
 
 	public FileConfiguration config;
-	public int configVersion = 9;
+	public int configVersion = 10;
 	public static int mc_version;
 	public static String mc_protocol;
 
