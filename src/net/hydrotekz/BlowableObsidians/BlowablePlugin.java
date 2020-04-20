@@ -27,7 +27,6 @@ public class BlowablePlugin extends JavaPlugin {
 	public static String mc_protocol;
 
 	public final Listener Listener = new Listener(this);
-	public final Handler Handler = new Handler(this);
 
 	public void onEnable() {
 		String pck = getServer().getClass().getPackage().getName();
@@ -51,7 +50,7 @@ public class BlowablePlugin extends JavaPlugin {
 		config = getConfig();
 		config.options().copyDefaults(true);
 		config.addDefault("Config Version", 0);
-		Handler.exportConfig();
+		ConfigHandler.exportConfig();
 	}
 
 	private void registerCommands() {

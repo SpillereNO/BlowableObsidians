@@ -1,7 +1,7 @@
 package net.hydrotekz.BlowableObsidians.listeners;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -17,6 +17,8 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import net.hydrotekz.BlowableObsidians.BlowablePlugin;
+import net.hydrotekz.BlowableObsidians.handlers.ConfigHandler;
+import net.hydrotekz.BlowableObsidians.model.DamagedBlock;
 import net.hydrotekz.BlowableObsidians.support.MultiVersion;
 
 public class Listener implements org.bukkit.event.Listener {
@@ -26,8 +28,6 @@ public class Listener implements org.bukkit.event.Listener {
 	public Listener(BlowablePlugin blowablePlugin){
 		plugin = blowablePlugin;
 	}
-
-	private HashMap<String, Double> healthMap = new HashMap<String, Double>();
 
 	@EventHandler (priority = EventPriority.MONITOR)
 	public void onBlockExplode(BlockExplodeEvent e) {
@@ -59,7 +59,7 @@ public class Listener implements org.bukkit.event.Listener {
 		if (yield > 1) dmgRadius+=yield/10;
 		int radius = (int)Math.ceil(dmgRadius);
 
-		blocks.removeIf((block) -> plugin.Handler.makeBlowable(block));
+		blocks.removeIf((block) -> ConfigHandler.makeBlowable(block));
 
 		for (int x = -radius; x <= radius; x++) {
 			for (int y = -radius; y <= radius; y++) {
@@ -67,7 +67,7 @@ public class Listener implements org.bukkit.event.Listener {
 					Location loc = new Location(source.getWorld(), x + source.getX(), y + source.getY(), z + source.getZ());
 					if (source.distance(loc) <= dmgRadius) {
 						Block block = loc.getBlock();
-						if (plugin.Handler.makeBlowable(block)){
+						if (ConfigHandler.makeBlowable(block)){
 
 							// Get distance and damage
 							double distance = loc.distance(source);
@@ -89,12 +89,10 @@ public class Listener implements org.bukkit.event.Listener {
 							if (damage > 0){
 								if (distance > 1) damage = damage / (distance * 0.7);
 
-								String id = plugin.Handler.getID(block);
-								if (healthMap.containsKey(id)) healthMap.put(id, healthMap.get(id)-damage);
-								else healthMap.put(id, plugin.Handler.getHealth(block)-damage);
-								if (healthMap.get(id) <= 0){
+								DamagedBlock dmgBlock = new DamagedBlock(block);
+								if (dmgBlock.damage(damage)) {
 									blocks.add(block);
-									healthMap.remove(id);
+									DamagedBlock.clean(block);
 								}
 							}
 						}
@@ -108,8 +106,8 @@ public class Listener implements org.bukkit.event.Listener {
 	@EventHandler (priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent e){
 		if (!e.isCancelled()){
-			String id = plugin.Handler.getID(e.getBlock());
-			healthMap.remove(id);
+			Block block = e.getBlock();
+			DamagedBlock.clean(block);
 		}
 	}
 
@@ -120,14 +118,21 @@ public class Listener implements org.bukkit.event.Listener {
 			if (e.getAction().toString().equalsIgnoreCase(plugin.getConfig().getString("Check.Type"))){
 				String required = plugin.getConfig().getString("Check.Item");
 				if (required.equals("*") || (MultiVersion.get().getItemInHand(p) != null && MultiVersion.get().getItemInHand(p).getType().toString().equalsIgnoreCase(required))){
-					Block b = e.getClickedBlock();
-					String id = plugin.Handler.getID(b);
-					if (healthMap.containsKey(id)){
-						int percent = (int)(((healthMap.get(id) * 100) / plugin.Handler.getHealth(b)));
-						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health").replaceFirst("<percent>", String.valueOf(percent)));
+					Block block = e.getClickedBlock();
+					Optional<DamagedBlock> optDmgBlock = DamagedBlock.get(block);
+					if (optDmgBlock.isPresent()){
+						DamagedBlock dmgBlock = optDmgBlock.get();
+						int percent = (int)(((dmgBlock.getHealth() * 100) / ConfigHandler.getDefaultHealth(block.getType())));
+						int health = (int) Math.round(dmgBlock.getHealth());
+						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health")
+								.replaceFirst("<percent>", String.valueOf(percent))
+								.replaceFirst("<health>", String.valueOf(health)));
 						p.sendMessage(msg);
-					} else if (plugin.Handler.makeBlowable(b) && plugin.getConfig().getBoolean("Always Send Health")){
-						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health").replaceFirst("<percent>", "100"));
+					} else if (ConfigHandler.makeBlowable(block) && plugin.getConfig().getBoolean("Always Send Health")){
+						int health = (int) Math.round(ConfigHandler.getDefaultHealth(block.getType()));
+						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health")
+								.replaceFirst("<percent>", "100")
+								.replaceFirst("<health>", String.valueOf(health)));
 						p.sendMessage(msg);
 					}
 				}
