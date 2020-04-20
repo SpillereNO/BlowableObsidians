@@ -21,7 +21,7 @@ Check:
 ### Messages which can be translated.
 ### [Beta feature] Use <health> instead of <percent>
 Message:
-  Block health: '&9Block health: &c<percent>% hp'
+  Block Health: '&9Block health: &c<percent>% hp'
 
 ### How much health the blowable blocks has.
 ### Use wildcard <blocks> for all blocks.

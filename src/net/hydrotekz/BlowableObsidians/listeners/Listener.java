@@ -124,13 +124,13 @@ public class Listener implements org.bukkit.event.Listener {
 						DamagedBlock dmgBlock = optDmgBlock.get();
 						int percent = (int)(((dmgBlock.getHealth() * 100) / ConfigHandler.getDefaultHealth(block.getType())));
 						int health = (int) Math.round(dmgBlock.getHealth());
-						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health")
+						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block Health")
 								.replaceFirst("<percent>", String.valueOf(percent))
 								.replaceFirst("<health>", String.valueOf(health)));
 						p.sendMessage(msg);
 					} else if (ConfigHandler.makeBlowable(block) && plugin.getConfig().getBoolean("Always Send Health")){
 						int health = (int) Math.round(ConfigHandler.getDefaultHealth(block.getType()));
-						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block health")
+						String msg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("Message.Block Health")
 								.replaceFirst("<percent>", "100")
 								.replaceFirst("<health>", String.valueOf(health)));
 						p.sendMessage(msg);
