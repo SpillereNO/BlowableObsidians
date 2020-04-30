@@ -30,7 +30,7 @@ public class DamagedBlock {
 		&& dmgBlock.getY() == b.getY()
 		&& dmgBlock.getZ() == b.getZ()
 		&& dmgBlock.getWorld().equals(b.getWorld().getName()))
-		.findFirst().ifPresentOrElse((dmgBlock) -> {
+		.findFirst().ifPresent((dmgBlock) -> {
 			world = dmgBlock.getWorld();
 			x = dmgBlock.getX();
 			y = dmgBlock.getY();
@@ -38,16 +38,17 @@ public class DamagedBlock {
 			health = dmgBlock.getHealth();
 			lastDamaged = dmgBlock.getLastDamaged();
 			material = dmgBlock.getMaterial();
-		}, () -> {
-			world = b.getWorld().getName();
-			x = b.getX();
-			y = b.getY();
-			z = b.getZ();
-			health = ConfigHandler.getDefaultHealth(b.getType());
-			lastDamaged = System.currentTimeMillis();
-			material = b.getType();
-			blocks.add(this);
+			return;
 		});
+
+		world = b.getWorld().getName();
+		x = b.getX();
+		y = b.getY();
+		z = b.getZ();
+		health = ConfigHandler.getDefaultHealth(b.getType());
+		lastDamaged = System.currentTimeMillis();
+		material = b.getType();
+		blocks.add(this);
 
 	}
 

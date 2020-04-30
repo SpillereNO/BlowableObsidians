@@ -1,6 +1,10 @@
 ##########################################
 # -------------- Features -------------- #
 ##########################################
+# Notice: Item names in 1.8 and 1.15.2 is not always the same!
+# List of blocks here (latest): https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
+# List of blocks here (1.8): https://helpch.at/docs/1.8/org/bukkit/Material.html
+##########################################
 
 ### Various options
 Damage Radius: 3.0
@@ -31,8 +35,6 @@ Blowable Blocks Health:
   enchantment_table: 5.0
   anvil: 5.0
   ender_chest: 5.0
-# List of blocks here (latest): https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
-# List of blocks here (1.8): https://helpch.at/docs/1.8/org/bukkit/Material.html
 
 ### Health regeneration
 ### How many seconds until the block health is back at max health.
