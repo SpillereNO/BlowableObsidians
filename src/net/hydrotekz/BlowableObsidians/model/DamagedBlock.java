@@ -41,15 +41,16 @@ public class DamagedBlock {
 			return;
 		});
 
-		world = b.getWorld().getName();
-		x = b.getX();
-		y = b.getY();
-		z = b.getZ();
-		health = ConfigHandler.getDefaultHealth(b.getType());
-		lastDamaged = System.currentTimeMillis();
-		material = b.getType();
-		blocks.add(this);
-
+		if (world == null){
+			world = b.getWorld().getName();
+			x = b.getX();
+			y = b.getY();
+			z = b.getZ();
+			health = ConfigHandler.getDefaultHealth(b.getType());
+			lastDamaged = System.currentTimeMillis();
+			material = b.getType();
+			blocks.add(this);
+		}
 	}
 
 	public static Optional<DamagedBlock> get(Block b) {
