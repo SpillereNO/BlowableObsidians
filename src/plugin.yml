@@ -1,6 +1,6 @@
 name: BlowableObsidians
 author: [HydroTekZ]
 main: net.hydrotekz.BlowableObsidians.BlowablePlugin
-version: 1.6.5
+version: 1.5
 spigot: 24194
 api-version: 1.16
