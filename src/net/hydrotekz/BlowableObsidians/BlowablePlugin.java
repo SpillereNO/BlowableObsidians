@@ -43,10 +43,6 @@ public class BlowablePlugin extends JavaPlugin {
 		registerCommands();
 	}
 
-	public void onDisable() {
-		WitherListener.onDisable();
-	}
-
 	public void loadListeners() {
 		getServer().getPluginManager().registerEvents(Listener, this);
 		getServer().getPluginManager().registerEvents(WitherListener, this);

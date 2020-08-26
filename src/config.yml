@@ -66,11 +66,3 @@ Bedrock Protection: 2
 
 ### Don't touch this
 Config Version: 11
-
-##########################################
-# ----------- Custom Settings ---------- #
-##########################################
-
-### Wither despawn rate
-### How many seconds until wither despawn
-Wither Lifetime: 300
