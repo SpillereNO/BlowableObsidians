@@ -25,12 +25,17 @@ public class DamagedBlock {
 
 	public DamagedBlock(Block b) {
 
-		blocks.stream().filter(dmgBlock ->
+		// Search for existing object
+		Optional<DamagedBlock> existing = blocks.stream().filter(dmgBlock ->
 		dmgBlock.getX() == b.getX()
 		&& dmgBlock.getY() == b.getY()
 		&& dmgBlock.getZ() == b.getZ()
 		&& dmgBlock.getWorld().equals(b.getWorld().getName()))
-		.findFirst().ifPresent((dmgBlock) -> {
+				.findFirst();
+
+		// Return existing object
+		if (existing.isPresent()) {
+			DamagedBlock dmgBlock = existing.get();
 			world = dmgBlock.getWorld();
 			x = dmgBlock.getX();
 			y = dmgBlock.getY();
@@ -38,10 +43,10 @@ public class DamagedBlock {
 			health = dmgBlock.getHealth();
 			lastDamaged = dmgBlock.getLastDamaged();
 			material = dmgBlock.getMaterial();
-			return;
-		});
+		}
 
-		if (world == null){
+		// Create and return new object
+		else {
 			world = b.getWorld().getName();
 			x = b.getX();
 			y = b.getY();
@@ -76,7 +81,7 @@ public class DamagedBlock {
 		setLastDamaged(System.currentTimeMillis());
 		blocks.remove(this);
 		blocks.add(this);
-		return getHealth() <= 0;
+		return (int)getHealth() <= 0;
 	}
 
 	public double getHealth() {

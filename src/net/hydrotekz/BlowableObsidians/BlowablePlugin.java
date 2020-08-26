@@ -22,18 +22,19 @@ public class BlowablePlugin extends JavaPlugin {
 	public static BlowablePlugin instance;
 
 	public FileConfiguration config;
-	public int configVersion = 10;
+	public int configVersion = 11;
 	public static int mc_version;
 	public static String mc_protocol;
 
 	public final Listener Listener = new Listener(this);
+	public final WitherListener WitherListener = new WitherListener(this);
 
 	public void onEnable() {
 		String pck = getServer().getClass().getPackage().getName();
 		mc_protocol = pck.substring(pck.lastIndexOf('.') + 1);
 		String[] split = mc_protocol.replaceFirst("v", "").split("_");
 		mc_version = Integer.parseInt(split[0] + split[1]);
-		System.out.println("BlowableObsidians running on server with " + mc_version + " / " + mc_protocol + ".");
+		getLogger().info("Running on server with " + mc_version + " / " + mc_protocol + ".");
 
 		instance = this;
 		loadListeners();
@@ -44,6 +45,7 @@ public class BlowablePlugin extends JavaPlugin {
 
 	public void loadListeners() {
 		getServer().getPluginManager().registerEvents(Listener, this);
+		getServer().getPluginManager().registerEvents(WitherListener, this);
 	}
 
 	private void loadConfig() {

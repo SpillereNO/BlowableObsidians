@@ -1,14 +1,34 @@
 ##########################################
-# -------------- Features -------------- #
+# ------------ Main Settings ----------- #
 ##########################################
 # Notice: Item names in 1.8 and 1.15.2 is not always the same!
 # List of blocks here (latest): https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 # List of blocks here (1.8): https://helpch.at/docs/1.8/org/bukkit/Material.html
 ##########################################
 
-### Various options
-Damage Radius: 3.0
-Only TNT: false
+### How much to damage managed blocks
+Explosion Settings:
+  Default:
+    Radius: 3.0
+    Damage: 1.0
+  TNT:
+    Radius: 3.0
+    Damage: 1.0
+  Creeper:
+    Radius: 3.0
+    Damage: 1.0
+  Wither Creation:
+    Radius: 3.0
+    Damage: 1.0
+  Wither Projectile:
+    Radius: 3.0
+    Damage: 1.0
+  Wither Block Eating:
+    Damage: 1.0
+## Explosions caused by other plugins:
+  Custom Explosions: 
+    Radius: 3.0
+    Damage: 1.0
 
 ### Send block health if 100% health.
 Always Send Health: true
@@ -23,14 +43,14 @@ Check:
   Type: 'RIGHT_CLICK_BLOCK'
 
 ### Messages which can be translated.
-### [Beta feature] Use <health> instead of <percent>
+### You may use <health> instead of <percent>%
 Message:
   Block Health: '&9Block health: &c<percent>% hp'
 
 ### How much health the blowable blocks has.
 ### Use wildcard <blocks> for all blocks.
 ### You can also add more blocks here
-Blowable Blocks Health:
+Blocks Health:
   obsidian: 5.0
   enchantment_table: 5.0
   anvil: 5.0
@@ -45,4 +65,4 @@ Bedrock Protection: 2
 # Nether has an override at Y 127
 
 ### Don't touch this
-Config Version: 10
+Config Version: 11
