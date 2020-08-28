@@ -1,10 +1,10 @@
-##########################################
-# ------------ Main Settings ----------- #
-##########################################
-# Notice: Item names in 1.8 and 1.15.2 is not always the same!
+#########################################
+# -------------- Settings ------------- #
+#########################################
+# Notice: Item names in 1.8 and 1.6.2 is not always the same!
 # List of blocks here (latest): https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 # List of blocks here (1.8): https://helpch.at/docs/1.8/org/bukkit/Material.html
-##########################################
+#########################################
 
 ### How much to damage managed blocks
 Explosion Settings:
