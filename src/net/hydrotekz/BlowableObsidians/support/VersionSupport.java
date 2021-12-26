@@ -5,6 +5,6 @@ import org.bukkit.inventory.ItemStack;
 
 public interface VersionSupport {
 
-	public ItemStack getItemInHand(Player player);
+    public ItemStack getItemInHand(Player player);
 
 }
