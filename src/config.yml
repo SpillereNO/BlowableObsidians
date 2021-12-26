@@ -1,10 +1,30 @@
 #########################################
 # -------------- Settings ------------- #
 #########################################
-# Notice: Item names in 1.8 and 1.6.2 is not always the same!
+# Notice: Item names in 1.8 and 1.8.1 is not always the same!
 # List of blocks here (latest): https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html
 # List of blocks here (1.8): https://helpch.at/docs/1.8/org/bukkit/Material.html
 #########################################
+
+### Which worlds and where the plugin works
+World Settings:
+  world:
+    Enabled: true
+    Bedrock Protection:
+      - -64
+      - -63
+      - -62
+  world_nether:
+    Enabled: true
+    Bedrock Protection:
+      - 0
+      - 1
+      - 2
+      - 126
+      - 127
+  world_the_end:
+    Enabled: true
+    Bedrock Protection: []
 
 ### How much to damage managed blocks
 Explosion Settings:
@@ -60,9 +80,5 @@ Blocks Health:
 ### How many seconds until the block health is back at max health.
 Regeneration Time: 3600
 
-### Protect bedrock below chosen Y level
-Bedrock Protection: 2
-# Nether has an override at Y 127
-
 ### Don't touch this
-Config Version: 11
+Config Version: 12

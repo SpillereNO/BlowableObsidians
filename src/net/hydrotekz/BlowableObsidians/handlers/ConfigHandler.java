@@ -3,7 +3,7 @@ package net.hydrotekz.BlowableObsidians.handlers;
 import net.hydrotekz.BlowableObsidians.BlowablePlugin;
 import net.hydrotekz.BlowableObsidians.util.Util;
 import org.bukkit.Material;
-import org.bukkit.World.Environment;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -11,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -90,17 +91,18 @@ public class ConfigHandler {
 
     public static boolean makeBlowable(Block b) {
 
-        if (b.getType() == Material.BEDROCK) {
-            int bedrockProtectionLevel = BlowablePlugin.instance.getConfig().getInt("Bedrock Protection");
-            if (b.getWorld().getEnvironment() == Environment.NORMAL) {
-                if (b.getY() <= bedrockProtectionLevel) {
-                    return false;
-                }
-            } else if (b.getWorld().getEnvironment() == Environment.NETHER) {
-                if (b.getY() == 127 || b.getY() <= bedrockProtectionLevel) {
-                    return false;
-                }
-            }
+        World world = b.getWorld();
+        Map<String, Object> allWorldSettings = BlowablePlugin.instance.getConfig().getConfigurationSection("World Settings").getValues(false);
+        if (!allWorldSettings.containsKey(world.getName())) {
+            return false;
+        }
+        if (!BlowablePlugin.instance.getConfig().getBoolean("World Settings." + world.getName() + ".Enabled")) {
+            return false;
+        }
+
+        List<Integer> bedrockProtection = BlowablePlugin.instance.getConfig().getIntegerList("World Settings." + world.getName() + ".Bedrock Protection");
+        if (b.getType() == Material.BEDROCK && bedrockProtection.contains((Integer) b.getY())) {
+            return false;
         }
 
         Material m = b.getType();
