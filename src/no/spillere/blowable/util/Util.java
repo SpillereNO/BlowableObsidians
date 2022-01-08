@@ -1,4 +1,4 @@
-package net.hydrotekz.BlowableObsidians.util;
+package no.spillere.blowable.util;
 
 import java.io.File;
 import java.io.InputStream;

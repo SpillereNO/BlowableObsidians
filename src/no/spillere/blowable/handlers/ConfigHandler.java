@@ -1,7 +1,7 @@
-package net.hydrotekz.BlowableObsidians.handlers;
+package no.spillere.blowable.handlers;
 
-import net.hydrotekz.BlowableObsidians.BlowablePlugin;
-import net.hydrotekz.BlowableObsidians.util.Util;
+import no.spillere.blowable.BlowablePlugin;
+import no.spillere.blowable.util.Util;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;

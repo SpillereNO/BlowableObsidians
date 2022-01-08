@@ -1,6 +1,6 @@
-package net.hydrotekz.BlowableObsidians.handlers;
+package no.spillere.blowable.handlers;
 
-import net.hydrotekz.BlowableObsidians.BlowablePlugin;
+import no.spillere.blowable.BlowablePlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

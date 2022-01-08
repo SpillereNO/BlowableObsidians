@@ -1,7 +1,7 @@
-package net.hydrotekz.BlowableObsidians.listeners;
+package no.spillere.blowable.listeners;
 
-import net.hydrotekz.BlowableObsidians.BlowablePlugin;
-import net.hydrotekz.BlowableObsidians.handlers.ConfigHandler;
+import no.spillere.blowable.BlowablePlugin;
+import no.spillere.blowable.handlers.ConfigHandler;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.EventHandler;

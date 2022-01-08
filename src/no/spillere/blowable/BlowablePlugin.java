@@ -1,10 +1,11 @@
-package net.hydrotekz.BlowableObsidians;
+package no.spillere.blowable;
 
 import com.google.common.collect.Lists;
-import net.hydrotekz.BlowableObsidians.handlers.ConfigHandler;
-import net.hydrotekz.BlowableObsidians.handlers.ReloadCommand;
-import net.hydrotekz.BlowableObsidians.listeners.Listener;
-import net.hydrotekz.BlowableObsidians.listeners.WitherListener;
+import no.spillere.blowable.handlers.ConfigHandler;
+import no.spillere.blowable.handlers.ReloadCommand;
+import no.spillere.blowable.listeners.Listener;
+import no.spillere.blowable.listeners.WitherListener;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
@@ -19,12 +20,13 @@ import java.lang.reflect.Field;
 
 public class BlowablePlugin extends JavaPlugin {
 
-    public static BlowablePlugin instance;
-
     public FileConfiguration config;
     public int configVersion = 12;
+
+    public static BlowablePlugin instance;
     public static int mc_version;
     public static String mc_protocol;
+    public static Metrics metrics;
 
     public final Listener Listener = new Listener(this);
     public final WitherListener WitherListener = new WitherListener(this);
@@ -36,11 +38,16 @@ public class BlowablePlugin extends JavaPlugin {
         mc_version = Integer.parseInt(split[0] + split[1]);
         getLogger().info("Running on server with " + mc_version + " / " + mc_protocol + ".");
 
+        // Load plugin
         instance = this;
         loadListeners();
         getDataFolder().mkdir();
         loadConfig();
         registerCommands();
+
+        // Enable bStats
+        int pluginId = 13883;
+        metrics = new Metrics(this, pluginId);
     }
 
     public void loadListeners() {

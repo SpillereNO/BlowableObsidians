@@ -1,9 +1,9 @@
-package net.hydrotekz.BlowableObsidians.listeners;
+package no.spillere.blowable.listeners;
 
-import net.hydrotekz.BlowableObsidians.BlowablePlugin;
-import net.hydrotekz.BlowableObsidians.handlers.ConfigHandler;
-import net.hydrotekz.BlowableObsidians.model.DamagedBlock;
-import net.hydrotekz.BlowableObsidians.support.MultiVersion;
+import no.spillere.blowable.BlowablePlugin;
+import no.spillere.blowable.handlers.ConfigHandler;
+import no.spillere.blowable.model.DamagedBlock;
+import no.spillere.blowable.support.MultiVersion;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;

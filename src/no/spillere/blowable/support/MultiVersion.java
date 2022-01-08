@@ -1,6 +1,6 @@
-package net.hydrotekz.BlowableObsidians.support;
+package no.spillere.blowable.support;
 
-import net.hydrotekz.BlowableObsidians.BlowablePlugin;
+import no.spillere.blowable.BlowablePlugin;
 
 public abstract class MultiVersion implements VersionSupport {
 
